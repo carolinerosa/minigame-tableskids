@@ -18,7 +18,8 @@ public  class Game extends View implements Runnable{
 
 	private long time = 1;
 	Bitmap [] geometric_figures;	
-	int period = 30000;
+	int period = 60;
+	int contador;
 	private Paint paint;	
 	int totalPoints = 4;
 	int hitPoints = 0;	
@@ -92,7 +93,7 @@ public  class Game extends View implements Runnable{
 
 		// Textos na tela.
 		canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
-		canvas.drawText("Time:" + period , getWidth() - 140, getHeight() - 12, paint);
+		canvas.drawText("Time:" +" " +  period , getWidth() - 140, getHeight() - 12, paint);
 		int o = (int)getWidth()/3;
 		
 		int a = (int)positionX;
@@ -113,8 +114,8 @@ public  class Game extends View implements Runnable{
 			int a = (int)event.getRawX();
 			int b = (int)event.getRawY();
 	
-			if(objetosBaixo[2].contains(a,b))
-			if (objetosBaixo[2].intersect(area))
+			//if(objetosBaixo[2].contains(a,b))
+			if (objetosBaixo[2].intersect(areasObjetosCima[1]))
 
 			{
 				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
@@ -169,8 +170,11 @@ public  class Game extends View implements Runnable{
 	
 	public void update()
 	{
-		period-=1;
-		
+		contador ++;
+		if (contador == 1000){
+			period-=1;
+			contador = 0;
+		}
 	}
 	
 	
