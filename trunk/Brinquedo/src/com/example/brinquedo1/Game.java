@@ -88,11 +88,8 @@ public  class Game extends View implements Runnable{
 		canvas.drawBitmap(geometric_figures[2], getWidth() - 100 , 0, paint);
 		
 		// imagem que ficará na parte de baixo
-		
 		canvas.drawBitmap(geometric_figures[3], positionX, positionY, paint);
-	//	canvas.drawBitmap(geometric_figures[4], positionX + 110, positionY, paint);
-	//	canvas.drawBitmap(geometric_figures[5], positionX - 110, positionY, paint);
-		
+
 		// Textos na tela.
 		canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
 		canvas.drawText("Time:" + period , getWidth() - 140, getHeight() - 12, paint);
@@ -109,20 +106,19 @@ public  class Game extends View implements Runnable{
 		 }
 	}
 	public boolean onTouchEvent(MotionEvent event) 
-	{
-	
+	{	
 		if (event.getAction() == MotionEvent.ACTION_DOWN) 
 		{
 			Log.i(MainActivity.TAG, "down baby down !! ");
 			int a = (int)event.getRawX();
 			int b = (int)event.getRawY();
-
-		
+	
 			if(objetosBaixo[2].contains(a,b))
+			if (objetosBaixo[2].intersect(area))
 
 			{
-				//positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
-				//positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
+				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
+				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
 			}
 
 		}
@@ -140,8 +136,7 @@ public  class Game extends View implements Runnable{
 				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
 				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
 				
-				//if(areasObjetosCima[0].se(objetosbaixo[2]))
-		 //		if (area)
+				if(objetosBaixo[2].intersect(areasObjetosCima[1]))
 				{
 					positionX=areasObjetosCima[1].top;
 					positionY=areasObjetosCima[1].left;
