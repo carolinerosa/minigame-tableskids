@@ -2,6 +2,7 @@ package com.example.brinquedo1;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,12 +24,13 @@ public  class Game extends View implements Runnable{
 	private Paint paint;	
 	int totalPoints = 4;
 	int hitPoints = 0;	
-	Rect[] objetosBaixo = new Rect[3];
+	Rect objetosBaixo ;
 	Rect [] areasObjetosCima = new Rect[3];
 	private static float positionX;
 	private static float positionY;
 	private Canvas MyCanvas;
-	
+	private Random rnd = new Random();
+	private int current;
 	public Game(Context context) 
 	{
 		super(context);
@@ -58,7 +60,7 @@ public  class Game extends View implements Runnable{
 			geometric_figures[3] = BitmapFactory.decodeStream(circulo_colorido);
 			geometric_figures[4] = BitmapFactory.decodeStream(hexagono_colorido);
 			geometric_figures[5] = BitmapFactory.decodeStream(triangulo_colorido);
-
+			geometric_figures[6] = geometric_figures[rnd.nextInt(3)+3];
 		} 
 		catch (IOException e) 
 		{
@@ -89,7 +91,7 @@ public  class Game extends View implements Runnable{
 		canvas.drawBitmap(geometric_figures[2], getWidth() - 100 , 0, paint);
 		
 		// imagem que ficará na parte de baixo
-		canvas.drawBitmap(geometric_figures[3], positionX, positionY, paint);
+		canvas.drawBitmap(geometric_figures[6], positionX, positionY, paint);
 
 		// Textos na tela.
 		canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
@@ -98,12 +100,12 @@ public  class Game extends View implements Runnable{
 		
 		int a = (int)positionX;
 		int b = (int)positionY;
-		objetosBaixo[2]= new Rect(a,b, a+ (int)geometric_figures[3].getWidth(), b+(int)geometric_figures[3].getHeight());
+		objetosBaixo= new Rect(a,b, a+ (int)geometric_figures[5].getWidth(), b+(int)geometric_figures[3].getHeight());
 		
 		 for (int i = 0; i < areasObjetosCima.length; i ++)
 		 {
 			 areasObjetosCima[i]= new Rect(o,0, o+ (int)geometric_figures[i].getWidth(), (int)geometric_figures[i].getHeight());
-			 canvas.drawRect(areasObjetosCima[i], paint);
+			 //canvas.drawRect(areasObjetosCima[i], paint);
 		 }
 	}
 	public boolean onTouchEvent(MotionEvent event) 
@@ -111,16 +113,7 @@ public  class Game extends View implements Runnable{
 		if (event.getAction() == MotionEvent.ACTION_DOWN) 
 		{
 			Log.i(MainActivity.TAG, "down baby down !! ");
-			int a = (int)event.getRawX();
-			int b = (int)event.getRawY();
-	
-			//if(objetosBaixo[2].contains(a,b))
-			if (objetosBaixo[2].intersect(areasObjetosCima[1]))
-
-			{
-				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
-				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
-			}
+			
 
 		}
 		
@@ -131,16 +124,35 @@ public  class Game extends View implements Runnable{
 			int a = (int)event.getRawX();
 			int b = (int)event.getRawY();
 			
-			if(objetosBaixo[2].contains(a,b))
+			if(objetosBaixo.contains(a,b))
 
 			{
 				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
 				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
-				
-				if(objetosBaixo[2].intersect(areasObjetosCima[1]))
+				if(objetosBaixo.contains((int)areasObjetosCima[1].exactCenterX(), (int)areasObjetosCima[1].exactCenterY()))
 				{
-					positionX=areasObjetosCima[1].top;
-					positionY=areasObjetosCima[1].left;
+					int currentTime = period;
+					positionX=areasObjetosCima[1].left;
+					positionY=areasObjetosCima[1].top;
+					if(currentTime-period>=2){
+						
+						
+						current =rnd.nextInt(3);
+						
+						while(geometric_figures[6]==geometric_figures[current+3])
+						{
+							current=rnd.nextInt(3);
+						}
+						if(geometric_figures[6]!=geometric_figures[current+3]){
+								geometric_figures[6]=geometric_figures[current+3];
+								positionX=getWidth()/2;
+								positionY=getHeight()/2;
+								hitPoints++;
+						
+						}
+					}
+					
+					
 				}
 			}
 		}
