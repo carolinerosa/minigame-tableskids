@@ -31,6 +31,8 @@ public  class Game extends View implements Runnable{
 	private Canvas MyCanvas;
 	private Random rnd = new Random();
 	private int current;
+	private int currentTime;
+
 	public Game(Context context) 
 	{
 		super(context);
@@ -131,26 +133,10 @@ public  class Game extends View implements Runnable{
 				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
 				if(objetosBaixo.contains((int)areasObjetosCima[1].exactCenterX(), (int)areasObjetosCima[1].exactCenterY()))
 				{
-					int currentTime = period;
+					 currentTime = period;
 					positionX=areasObjetosCima[1].left;
 					positionY=areasObjetosCima[1].top;
-					if(currentTime-period>=2){
-						
-						
-						current =rnd.nextInt(3);
-						
-						while(geometric_figures[6]==geometric_figures[current+3])
-						{
-							current=rnd.nextInt(3);
-						}
-						if(geometric_figures[6]!=geometric_figures[current+3]){
-								geometric_figures[6]=geometric_figures[current+3];
-								positionX=getWidth()/2;
-								positionY=getHeight()/2;
-								hitPoints++;
-						
-						}
-					}
+					
 					
 					
 				}
@@ -186,6 +172,26 @@ public  class Game extends View implements Runnable{
 		if (contador == 1000){
 			period-=1;
 			contador = 0;
+		}
+		if(currentTime!=0){
+		if(currentTime-period>=1){
+						
+						
+						current =rnd.nextInt(3);
+						
+						while(geometric_figures[6]==geometric_figures[current+3])
+						{
+							current=rnd.nextInt(3);
+						}
+						if(geometric_figures[6]!=geometric_figures[current+3]){
+								geometric_figures[6]=geometric_figures[current+3];
+								positionX=getWidth()/2;
+								positionY=getHeight()/2;
+								hitPoints++;
+								currentTime=0;
+						
+						}
+					}
 		}
 	}
 	
