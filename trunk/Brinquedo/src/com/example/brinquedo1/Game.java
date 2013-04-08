@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,10 +20,11 @@ public  class Game extends View implements Runnable{
 
 	private long time = 1;
 	Bitmap [] geometric_figures;	
+	Bitmap [] Backgrounds;
 	int period = 60;
 	int contador;
 	private Paint paint;	
-	int totalPoints = 4;
+	int totalPoints = 3;
 	int hitPoints = 0;	
 	Rect objetosBaixo ;
 	Rect [] areasObjetosCima = new Rect[3];
@@ -42,6 +44,8 @@ public  class Game extends View implements Runnable{
 		setLongClickable(true);
 
 		geometric_figures = new Bitmap[7];
+		Backgrounds = new Bitmap[3];
+		
 		
 		paint = new Paint();
 		paint.setColor(Color.BLACK); 
@@ -55,7 +59,10 @@ public  class Game extends View implements Runnable{
 			InputStream circulo_colorido = context.getAssets().open("circuloColor.png");
 			InputStream hexagono_colorido = context.getAssets().open("hexagonoColor.png");
 			InputStream triangulo_colorido = context.getAssets().open("trianguloColor.png");
-
+			InputStream Vitoria = context.getAssets().open("bgCongrats.bmp");
+			InputStream Derrota = context.getAssets().open("bgGameOver.bmp");
+			InputStream Fundo = context.getAssets().open("Background1.png");
+			
 			geometric_figures[0] = BitmapFactory.decodeStream(circulo);
 			geometric_figures[1] = BitmapFactory.decodeStream(hexagono);
 			geometric_figures[2] = BitmapFactory.decodeStream(triangulo);
@@ -63,6 +70,10 @@ public  class Game extends View implements Runnable{
 			geometric_figures[4] = BitmapFactory.decodeStream(hexagono_colorido);
 			geometric_figures[5] = BitmapFactory.decodeStream(triangulo_colorido);
 			geometric_figures[6] = geometric_figures[rnd.nextInt(3)+3];
+			Backgrounds[0] = BitmapFactory.decodeStream(Vitoria);
+			Backgrounds[1] = BitmapFactory.decodeStream(Derrota);
+			Backgrounds[2] = BitmapFactory.decodeStream(Fundo);
+			
 		} 
 		catch (IOException e) 
 		{
@@ -85,8 +96,11 @@ public  class Game extends View implements Runnable{
 	public void draw(Canvas canvas)
 	{
 		super.draw(canvas);
+		
+		if(period!=0 && hitPoints != totalPoints){
 		MyCanvas=canvas;
 		
+		canvas.drawBitmap(Backgrounds[2], 0, 0, paint);	
 		// 3 imagens que ficarão na parte de cima
 		canvas.drawBitmap(geometric_figures[0], 0, 0, paint);		
 		canvas.drawBitmap(geometric_figures[1], getWidth()/3, 0, paint);
@@ -109,7 +123,17 @@ public  class Game extends View implements Runnable{
 			 areasObjetosCima[i]= new Rect(o,0, o+ (int)geometric_figures[i].getWidth(), (int)geometric_figures[i].getHeight());
 			 //canvas.drawRect(areasObjetosCima[i], paint);
 		 }
+		}
+		if(period == 0){
+			canvas.drawText("Você Perdeu", getWidth() / 3, getHeight() / 2, paint);
+			canvas.drawBitmap(Backgrounds[1], 0, 0, paint);
+		}
+		if(hitPoints == totalPoints){
+			canvas.drawText("Você Venceu", getWidth() / 3, getHeight() / 2, paint);
+			canvas.drawBitmap(Backgrounds[0], 0, 0, paint);
+		}
 	}
+	
 	public boolean onTouchEvent(MotionEvent event) 
 	{	
 		if (event.getAction() == MotionEvent.ACTION_DOWN) 
@@ -133,7 +157,7 @@ public  class Game extends View implements Runnable{
 				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
 				if(objetosBaixo.contains((int)areasObjetosCima[1].exactCenterX(), (int)areasObjetosCima[1].exactCenterY()))
 				{
-					 currentTime = period;
+					currentTime = period;
 					positionX=areasObjetosCima[1].left;
 					positionY=areasObjetosCima[1].top;
 					
@@ -168,11 +192,15 @@ public  class Game extends View implements Runnable{
 	
 	public void update()
 	{
-		contador ++;
+		if (period !=0){
+			contador ++;
+		}
+		
 		if (contador == 1000){
 			period-=1;
 			contador = 0;
 		}
+		
 		if(currentTime!=0){
 		if(currentTime-period>=1){
 						
@@ -191,6 +219,7 @@ public  class Game extends View implements Runnable{
 								currentTime=0;
 						
 						}
+						
 					}
 		}
 	}
