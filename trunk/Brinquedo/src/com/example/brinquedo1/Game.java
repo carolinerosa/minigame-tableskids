@@ -1,5 +1,6 @@
 package com.example.brinquedo1;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
@@ -35,6 +36,7 @@ public  class Game extends View implements Runnable{
 	private int current;
 	private int currentTime;
 
+
 	public Game(Context context) 
 	{
 		super(context);
@@ -53,6 +55,7 @@ public  class Game extends View implements Runnable{
 
 		try 
 		{
+			current = rnd.nextInt(3);
 			InputStream circulo = context.getAssets().open("circulo.png");
 			InputStream hexagono = context.getAssets().open("hexagono.png");
 			InputStream triangulo = context.getAssets().open("triangulo.png");
@@ -69,7 +72,7 @@ public  class Game extends View implements Runnable{
 			geometric_figures[3] = BitmapFactory.decodeStream(circulo_colorido);
 			geometric_figures[4] = BitmapFactory.decodeStream(hexagono_colorido);
 			geometric_figures[5] = BitmapFactory.decodeStream(triangulo_colorido);
-			geometric_figures[6] = geometric_figures[rnd.nextInt(3)+3];
+			geometric_figures[6] = geometric_figures[current+3];
 			Backgrounds[0] = BitmapFactory.decodeStream(Vitoria);
 			Backgrounds[1] = BitmapFactory.decodeStream(Derrota);
 			Backgrounds[2] = BitmapFactory.decodeStream(Fundo);
@@ -118,17 +121,16 @@ public  class Game extends View implements Runnable{
 		int b = (int)positionY;
 		objetosBaixo= new Rect(a,b, a+ (int)geometric_figures[5].getWidth(), b+(int)geometric_figures[3].getHeight());
 		
-		 for (int i = 0; i < areasObjetosCima.length; i ++)
-		 {
-			 areasObjetosCima[i]= new Rect(o,0, o+ (int)geometric_figures[i].getWidth(), (int)geometric_figures[i].getHeight());
-			 //canvas.drawRect(areasObjetosCima[i], paint);
-		 }
+		 areasObjetosCima[0]= new Rect(0,0, o+ (int)geometric_figures[0].getWidth(), (int)geometric_figures[0].getHeight());
+		 areasObjetosCima[1]= new Rect(getWidth()/3,0, o+ (int)geometric_figures[1].getWidth(), (int)geometric_figures[1].getHeight());
+		 areasObjetosCima[2]= new Rect(getWidth()-100,0, o+ (int)geometric_figures[2].getWidth(), (int)geometric_figures[2].getHeight());
 		}
 		if(period == 0){
 			canvas.drawText("Você Perdeu", getWidth() / 3, getHeight() / 2, paint);
 			canvas.drawBitmap(Backgrounds[1], 0, 0, paint);
 		}
-		if(hitPoints == totalPoints){
+		if(hitPoints == totalPoints)
+		{
 			canvas.drawText("Você Venceu", getWidth() / 3, getHeight() / 2, paint);
 			canvas.drawBitmap(Backgrounds[0], 0, 0, paint);
 		}
@@ -155,22 +157,73 @@ public  class Game extends View implements Runnable{
 			{
 				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
 				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
+				
+		if(geometric_figures[6] == geometric_figures[4]){
 				if(objetosBaixo.contains((int)areasObjetosCima[1].exactCenterX(), (int)areasObjetosCima[1].exactCenterY()))
 				{
 					currentTime = period;
 					positionX=areasObjetosCima[1].left;
 					positionY=areasObjetosCima[1].top;
-					
-					
-					
 				}
+		}
+	if(geometric_figures[6]==geometric_figures[3])
+		{
+				if(objetosBaixo.contains((int)areasObjetosCima[0].exactCenterX(), (int)areasObjetosCima[0].exactCenterY()))
+				{
+					currentTime = period;
+					positionX=areasObjetosCima[0].left;
+					positionY=areasObjetosCima[0].top;
+				}
+		}
+		if(geometric_figures[6] == geometric_figures[5]){
+				if(objetosBaixo.contains((int)areasObjetosCima[2].exactCenterX(), (int)areasObjetosCima[2].exactCenterY()))
+				{
+					currentTime = period;
+					positionX=areasObjetosCima[2].left;
+					positionY=areasObjetosCima[2].top;
+				}
+			}
 			}
 		}
 		
 		return super.onTouchEvent(event);
 	}
 
-	@Override
+
+	public void update()
+	{
+		if (period !=0){
+			contador ++;
+		}
+		
+		if (contador == 1000){
+			period-=1;
+			contador = 0;
+		}
+		
+		if(currentTime!=0){
+		if(currentTime-period>=1){
+						
+						geometric_figures[current]=geometric_figures[6];
+						current =rnd.nextInt(3);
+						
+						while(geometric_figures[6]==geometric_figures[current+3])
+						{
+							current=rnd.nextInt(3);
+						}
+						if(geometric_figures[6]!=geometric_figures[current+3]){
+							
+								geometric_figures[6]=geometric_figures[current+3];
+								positionX=getWidth()/2;
+								positionY=getHeight()/2;
+								hitPoints++;
+								currentTime=0;
+						
+						}
+						
+					}
+		}
+	}
 	public void run() {
 		while(true)
 		{
@@ -188,40 +241,6 @@ public  class Game extends View implements Runnable{
 		}
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public void update()
-	{
-		if (period !=0){
-			contador ++;
-		}
-		
-		if (contador == 1000){
-			period-=1;
-			contador = 0;
-		}
-		
-		if(currentTime!=0){
-		if(currentTime-period>=1){
-						
-						
-						current =rnd.nextInt(3);
-						
-						while(geometric_figures[6]==geometric_figures[current+3])
-						{
-							current=rnd.nextInt(3);
-						}
-						if(geometric_figures[6]!=geometric_figures[current+3]){
-								geometric_figures[6]=geometric_figures[current+3];
-								positionX=getWidth()/2;
-								positionY=getHeight()/2;
-								hitPoints++;
-								currentTime=0;
-						
-						}
-						
-					}
-		}
 	}
 	
 	
