@@ -20,23 +20,22 @@ import android.view.View;
 public  class Game extends View implements Runnable{
 
 	private long time = 1;
-	Bitmap [] geometric_figures;	
+	Bitmap [] geometricFigures;	
 	Bitmap [] Backgrounds;
 	int period = 60;
-	int contador;
+	int counter;
 	private Paint paint;	
 	int totalPoints = 3;
 	int hitPoints = 0;	
-	Rect objetosBaixo ;
-	Rect [] areasObjetosCima = new Rect[3];
+	Rect object_down ;
+	Rect [] areaObjectsUp = new Rect[3];
 	private static float positionX;
 	private static float positionY;
 	private Canvas MyCanvas;
 	private Random rnd = new Random();
 	private int current;
 	private int currentTime;
-
-
+	
 	public Game(Context context) 
 	{
 		super(context);
@@ -45,9 +44,8 @@ public  class Game extends View implements Runnable{
 		setClickable(true);
 		setLongClickable(true);
 
-		geometric_figures = new Bitmap[7];
+		geometricFigures = new Bitmap[7];
 		Backgrounds = new Bitmap[3];
-		
 		
 		paint = new Paint();
 		paint.setColor(Color.BLACK); 
@@ -66,13 +64,13 @@ public  class Game extends View implements Runnable{
 			InputStream Derrota = context.getAssets().open("bgGameOver.bmp");
 			InputStream Fundo = context.getAssets().open("Background1.png");
 			
-			geometric_figures[0] = BitmapFactory.decodeStream(circulo);
-			geometric_figures[1] = BitmapFactory.decodeStream(hexagono);
-			geometric_figures[2] = BitmapFactory.decodeStream(triangulo);
-			geometric_figures[3] = BitmapFactory.decodeStream(circulo_colorido);
-			geometric_figures[4] = BitmapFactory.decodeStream(hexagono_colorido);
-			geometric_figures[5] = BitmapFactory.decodeStream(triangulo_colorido);
-			geometric_figures[6] = geometric_figures[current+3];
+			geometricFigures[0] = BitmapFactory.decodeStream(circulo);
+			geometricFigures[1] = BitmapFactory.decodeStream(hexagono);
+			geometricFigures[2] = BitmapFactory.decodeStream(triangulo);
+			geometricFigures[3] = BitmapFactory.decodeStream(circulo_colorido);
+			geometricFigures[4] = BitmapFactory.decodeStream(hexagono_colorido);
+			geometricFigures[5] = BitmapFactory.decodeStream(triangulo_colorido);
+			geometricFigures[6] = geometricFigures[current+3];
 			Backgrounds[0] = BitmapFactory.decodeStream(Vitoria);
 			Backgrounds[1] = BitmapFactory.decodeStream(Derrota);
 			Backgrounds[2] = BitmapFactory.decodeStream(Fundo);
@@ -93,42 +91,46 @@ public  class Game extends View implements Runnable{
 		
 		positionX= getWidth()/2;
 		positionY=getHeight()/2;
-	
 	}
 
 	public void draw(Canvas canvas)
 	{
 		super.draw(canvas);
 		
-		if(period!=0 && hitPoints != totalPoints){
-		MyCanvas=canvas;
-		
-		canvas.drawBitmap(Backgrounds[2], 0, 0, paint);	
-		// 3 imagens que ficarão na parte de cima
-		canvas.drawBitmap(geometric_figures[0], 0, 0, paint);		
-		canvas.drawBitmap(geometric_figures[1], getWidth()/3, 0, paint);
-		canvas.drawBitmap(geometric_figures[2], getWidth() - 100 , 0, paint);
-		
-		// imagem que ficará na parte de baixo
-		canvas.drawBitmap(geometric_figures[6], positionX, positionY, paint);
-
-		// Textos na tela.
-		canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
-		canvas.drawText("Time:" +" " +  period , getWidth() - 140, getHeight() - 12, paint);
-		int o = (int)getWidth()/3;
-		
-		int a = (int)positionX;
-		int b = (int)positionY;
-		objetosBaixo= new Rect(a,b, a+ (int)geometric_figures[5].getWidth(), b+(int)geometric_figures[3].getHeight());
-		
-		 areasObjetosCima[0]= new Rect(0,0, o+ (int)geometric_figures[0].getWidth(), (int)geometric_figures[0].getHeight());
-		 areasObjetosCima[1]= new Rect(getWidth()/3,0, o+ (int)geometric_figures[1].getWidth(), (int)geometric_figures[1].getHeight());
-		 areasObjetosCima[2]= new Rect(getWidth()-100,0, o+ (int)geometric_figures[2].getWidth(), (int)geometric_figures[2].getHeight());
+		if(period!=0 && hitPoints != totalPoints)
+		{
+			MyCanvas=canvas;
+			
+			canvas.drawBitmap(Backgrounds[2], 0, 0, paint);	
+			
+			// 3 imagens que ficarão na parte de cima
+			canvas.drawBitmap(geometricFigures[0], 0, 0, paint);		
+			canvas.drawBitmap(geometricFigures[1], getWidth()/3, 0, paint);
+			canvas.drawBitmap(geometricFigures[2], getWidth() - 100 , 0, paint);
+			
+			// Imagem que ficará na parte de baixo
+			canvas.drawBitmap(geometricFigures[6], positionX, positionY, paint);
+	
+			// Textos na tela.
+			canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
+			canvas.drawText("Time:" +" " +  period , getWidth() - 140, getHeight() - 12, paint);
+			int o = (int)getWidth()/3;
+			
+			int a = (int)positionX;
+			int b = (int)positionY;
+			object_down= new Rect(a,b, a+ (int)geometricFigures[5].getWidth(), b+(int)geometricFigures[3].getHeight());
+			
+			 areaObjectsUp[0]= new Rect(0,0, o+ (int)geometricFigures[0].getWidth(), (int)geometricFigures[0].getHeight());
+			 areaObjectsUp[1]= new Rect(getWidth()/3,0, o+ (int)geometricFigures[1].getWidth(), (int)geometricFigures[1].getHeight());
+			 areaObjectsUp[2]= new Rect(getWidth()-100,0, o+ (int)geometricFigures[2].getWidth(), (int)geometricFigures[2].getHeight());
 		}
-		if(period == 0){
+		
+		if(period == 0)
+		{
 			canvas.drawText("Você Perdeu", getWidth() / 3, getHeight() / 2, paint);
 			canvas.drawBitmap(Backgrounds[1], 0, 0, paint);
 		}
+		
 		if(hitPoints == totalPoints)
 		{
 			canvas.drawText("Você Venceu", getWidth() / 3, getHeight() / 2, paint);
@@ -141,48 +143,49 @@ public  class Game extends View implements Runnable{
 		if (event.getAction() == MotionEvent.ACTION_DOWN) 
 		{
 			Log.i(MainActivity.TAG, "down baby down !! ");
-			
-
 		}
 		
-
 		if (event.getAction() == MotionEvent.ACTION_MOVE) 
 		{
 			Log.i(MainActivity.TAG, "SHAKE !!!");
 			int a = (int)event.getRawX();
 			int b = (int)event.getRawY();
 			
-			if(objetosBaixo.contains(a,b))
-
+			// Testes de Colisão da imagem preto e branco de acordo com a sua respectiva imagem colorida. 
+			if(object_down.contains(a,b))
 			{
-				positionX = event.getRawX()-geometric_figures[3].getWidth()/2;
-				positionY = event.getRawY()-geometric_figures[3].getHeight()/2;
+				positionX = event.getRawX()-geometricFigures[3].getWidth()/2;
+				positionY = event.getRawY()-geometricFigures[3].getHeight()/2;
 				
-		if(geometric_figures[6] == geometric_figures[4]){
-				if(objetosBaixo.contains((int)areasObjetosCima[1].exactCenterX(), (int)areasObjetosCima[1].exactCenterY()))
+				if(geometricFigures[6] == geometricFigures[4])
 				{
-					currentTime = period;
-					positionX=areasObjetosCima[1].left;
-					positionY=areasObjetosCima[1].top;
+					if(object_down.contains((int)areaObjectsUp[1].exactCenterX(), (int)areaObjectsUp[1].exactCenterY()))
+					{
+						currentTime = period;
+						positionX=areaObjectsUp[1].left;
+						positionY=areaObjectsUp[1].top;
+					}
 				}
-		}
-	if(geometric_figures[6]==geometric_figures[3])
-		{
-				if(objetosBaixo.contains((int)areasObjetosCima[0].exactCenterX(), (int)areasObjetosCima[0].exactCenterY()))
+				
+				if(geometricFigures[6]==geometricFigures[3])
 				{
-					currentTime = period;
-					positionX=areasObjetosCima[0].left;
-					positionY=areasObjetosCima[0].top;
+					if(object_down.contains((int)areaObjectsUp[0].exactCenterX(), (int)areaObjectsUp[0].exactCenterY()))
+					{
+						currentTime = period;
+						positionX=areaObjectsUp[0].left;
+						positionY=areaObjectsUp[0].top;
+					}
 				}
-		}
-		if(geometric_figures[6] == geometric_figures[5]){
-				if(objetosBaixo.contains((int)areasObjetosCima[2].exactCenterX(), (int)areasObjetosCima[2].exactCenterY()))
+				
+				if(geometricFigures[6] == geometricFigures[5])
 				{
-					currentTime = period;
-					positionX=areasObjetosCima[2].left;
-					positionY=areasObjetosCima[2].top;
+					if(object_down.contains((int)areaObjectsUp[2].exactCenterX(), (int)areaObjectsUp[2].exactCenterY()))
+					{
+						currentTime = period;
+						positionX=areaObjectsUp[2].left;
+						positionY=areaObjectsUp[2].top;
+					}
 				}
-			}
 			}
 		}
 		
@@ -192,47 +195,54 @@ public  class Game extends View implements Runnable{
 
 	public void update()
 	{
-		if (period !=0){
-			contador ++;
+		if (period !=0)
+		{
+			counter ++;
 		}
 		
-		if (contador == 1000){
+		if (counter == 1000)
+		{
 			period-=1;
-			contador = 0;
+			counter = 0;
 		}
 		
-		if(currentTime!=0){
-		if(currentTime-period>=1){
+		if(currentTime!=0)
+		{
+			if(currentTime-period>=1)
+			{
+				geometricFigures[current]=geometricFigures[6];
+				current = rnd.nextInt(3);
 						
-						geometric_figures[current]=geometric_figures[6];
-						current =rnd.nextInt(3);
+				while(geometricFigures[6]==geometricFigures[current+3])
+				{
+					current=rnd.nextInt(3);
+				}
+				
+				if(geometricFigures[6]!=geometricFigures[current+3])
+				{		
+					geometricFigures[6]=geometricFigures[current+3];
+					positionX=getWidth()/2;
+					positionY=getHeight()/2;
+					hitPoints++;
+					currentTime=0;
+				}
 						
-						while(geometric_figures[6]==geometric_figures[current+3])
-						{
-							current=rnd.nextInt(3);
-						}
-						if(geometric_figures[6]!=geometric_figures[current+3]){
-							
-								geometric_figures[6]=geometric_figures[current+3];
-								positionX=getWidth()/2;
-								positionY=getHeight()/2;
-								hitPoints++;
-								currentTime=0;
-						
-						}
-						
-					}
-		}
+			 }
+		 }
 	}
-	public void run() {
+	
+	public void run() 
+	{
 		while(true)
 		{
 			
-			try{
-				
+			try
+			{	
 				Thread.sleep(time);
 			}
-			catch(Exception e){
+			
+			catch(Exception e)
+			{
 				Log.e("Deu erro", "Quem sabe mete o pe");
 			}
 			
