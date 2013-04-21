@@ -12,7 +12,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +32,7 @@ public  class Game extends View implements Runnable{
 	private static float positionY;
 	private Canvas MyCanvas;
 	private Random rnd = new Random();
+	private Boolean pode = true;
 	private int current;
 	private int currentTime;
 	
@@ -114,15 +114,14 @@ public  class Game extends View implements Runnable{
 			// Textos na tela.
 			canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
 			canvas.drawText("Time:" +" " +  period , getWidth() - 140, getHeight() - 12, paint);
-			int o = (int)getWidth()/3;
 			
 			int a = (int)positionX;
 			int b = (int)positionY;
 			object_down= new Rect(a,b, a+ (int)geometricFigures[5].getWidth(), b+(int)geometricFigures[3].getHeight());
 			
-			 areaObjectsUp[0]= new Rect(0,0, o+ (int)geometricFigures[0].getWidth(), (int)geometricFigures[0].getHeight());
-			 areaObjectsUp[1]= new Rect(getWidth()/3,0, o+ (int)geometricFigures[1].getWidth(), (int)geometricFigures[1].getHeight());
-			 areaObjectsUp[2]= new Rect(getWidth()-100,0, o+ (int)geometricFigures[2].getWidth(), (int)geometricFigures[2].getHeight());
+			 areaObjectsUp[0]= new Rect(0,0, 0+ (int)geometricFigures[0].getWidth(), (int)geometricFigures[0].getHeight());
+			 areaObjectsUp[1]= new Rect(getWidth()/3,0, (int)getWidth()/3+ (int)geometricFigures[1].getWidth(), (int)geometricFigures[1].getHeight());
+			 areaObjectsUp[2]= new Rect(getWidth()-100,0, (int)getWidth()-100+ (int)geometricFigures[2].getWidth(), (int)geometricFigures[2].getHeight());
 		}
 		
 		if(period == 0)
@@ -148,44 +147,28 @@ public  class Game extends View implements Runnable{
 		if (event.getAction() == MotionEvent.ACTION_MOVE) 
 		{
 			Log.i(MainActivity.TAG, "SHAKE !!!");
-			int a = (int)event.getRawX();
-			int b = (int)event.getRawY();
+			int c = (int)event.getRawX();
+			int d = (int)event.getRawY();
+			
 			
 			// Testes de Colisão da imagem preto e branco de acordo com a sua respectiva imagem colorida. 
-			if(object_down.contains(a,b))
+			if(object_down.contains(c,d))
 			{
 				positionX = event.getRawX()-geometricFigures[3].getWidth()/2;
 				positionY = event.getRawY()-geometricFigures[3].getHeight()/2;
 				
-				if(geometricFigures[6] == geometricFigures[4])
-				{
-					if(object_down.contains((int)areaObjectsUp[1].exactCenterX(), (int)areaObjectsUp[1].exactCenterY()))
+				for(int i =0;i<3;i++){
+					if(geometricFigures[6] == geometricFigures[i+3])
 					{
-						currentTime = period;
-						positionX=areaObjectsUp[1].left;
-						positionY=areaObjectsUp[1].top;
+						if(object_down.contains((int)areaObjectsUp[i].exactCenterX(), (int)areaObjectsUp[i].exactCenterY()))
+						{
+							currentTime = period;
+							positionX=areaObjectsUp[i].left;
+							positionY=areaObjectsUp[i].top;
+						}
 					}
 				}
 				
-				if(geometricFigures[6]==geometricFigures[3])
-				{
-					if(object_down.contains((int)areaObjectsUp[0].exactCenterX(), (int)areaObjectsUp[0].exactCenterY()))
-					{
-						currentTime = period;
-						positionX=areaObjectsUp[0].left;
-						positionY=areaObjectsUp[0].top;
-					}
-				}
-				
-				if(geometricFigures[6] == geometricFigures[5])
-				{
-					if(object_down.contains((int)areaObjectsUp[2].exactCenterX(), (int)areaObjectsUp[2].exactCenterY()))
-					{
-						currentTime = period;
-						positionX=areaObjectsUp[2].left;
-						positionY=areaObjectsUp[2].top;
-					}
-				}
 			}
 		}
 		
@@ -208,7 +191,7 @@ public  class Game extends View implements Runnable{
 		
 		if(currentTime!=0)
 		{
-			if(currentTime-period>=1)
+			if(currentTime-period>=1 )
 			{
 				geometricFigures[current]=geometricFigures[6];
 				current = rnd.nextInt(3);
