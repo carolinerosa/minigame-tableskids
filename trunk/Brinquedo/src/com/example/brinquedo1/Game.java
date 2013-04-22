@@ -19,14 +19,16 @@ import android.view.View;
 public  class Game extends View implements Runnable{
 
 	private long time = 1;
-	Bitmap [] geometricFigures;	
+	Bitmap [] geometricFigures=new Bitmap[7];
 	Bitmap [] Backgrounds;
 	int period = 60;
 	int counter;
 	private Paint paint;	
+	private Rect Back = new Rect();
 	int totalPoints = 3;
 	int hitPoints = 0;	
 	Rect object_down ;
+	int[] oi = new int[3];
 	Rect [] areaObjectsUp = new Rect[3];
 	private static float positionX;
 	private static float positionY;
@@ -44,42 +46,29 @@ public  class Game extends View implements Runnable{
 		setClickable(true);
 		setLongClickable(true);
 
-		geometricFigures = new Bitmap[7];
 		Backgrounds = new Bitmap[3];
-		
+		ImageManager img = new ImageManager();
 		paint = new Paint();
+		
 		paint.setColor(Color.BLACK); 
 		paint.setTextSize(20); 
 
-		try 
-		{
 			current = rnd.nextInt(3);
-			InputStream circulo = context.getAssets().open("circulo.png");
-			InputStream hexagono = context.getAssets().open("hexagono.png");
-			InputStream triangulo = context.getAssets().open("triangulo.png");
-			InputStream circulo_colorido = context.getAssets().open("circuloColor.png");
-			InputStream hexagono_colorido = context.getAssets().open("hexagonoColor.png");
-			InputStream triangulo_colorido = context.getAssets().open("trianguloColor.png");
-			InputStream Vitoria = context.getAssets().open("bgCongrats.bmp");
-			InputStream Derrota = context.getAssets().open("bgGameOver.bmp");
-			InputStream Fundo = context.getAssets().open("Background1.png");
-			
-			geometricFigures[0] = BitmapFactory.decodeStream(circulo);
-			geometricFigures[1] = BitmapFactory.decodeStream(hexagono);
-			geometricFigures[2] = BitmapFactory.decodeStream(triangulo);
-			geometricFigures[3] = BitmapFactory.decodeStream(circulo_colorido);
-			geometricFigures[4] = BitmapFactory.decodeStream(hexagono_colorido);
-			geometricFigures[5] = BitmapFactory.decodeStream(triangulo_colorido);
+			geometricFigures[0] = img.ImageManager("circulo.png", context);
+			geometricFigures[1] = img.ImageManager("hexagono.png", context);
+			geometricFigures[2] = img.ImageManager("triangulo.png", context);
+			geometricFigures[3] = img.ImageManager("circuloColor.png", context);
+			geometricFigures[4] = img.ImageManager("hexagonoColor.png", context);
+			geometricFigures[5] = img.ImageManager("trianguloColor.png", context);
 			geometricFigures[6] = geometricFigures[current+3];
-			Backgrounds[0] = BitmapFactory.decodeStream(Vitoria);
-			Backgrounds[1] = BitmapFactory.decodeStream(Derrota);
-			Backgrounds[2] = BitmapFactory.decodeStream(Fundo);
+			oi[0] = current+3;
+			oi[1]=0;
+			oi[2]=0;
+			Backgrounds[0] = img.ImageManager("bgCongrats.bmp", context);
+			Backgrounds[1] = img.ImageManager("bgGameOver.bmp", context);
+			Backgrounds[2] = img.ImageManager("Background1.png", context);
 			
-		} 
-		catch (IOException e) 
-		{
-			Log.e(MainActivity.TAG, "Erro carregando imagem");
-		}
+		
 		Thread processo = new Thread(this);
 		processo.start();
 		
@@ -91,6 +80,8 @@ public  class Game extends View implements Runnable{
 		
 		positionX= getWidth()/2;
 		positionY=getHeight()/2;
+		Back.set(0, 0, getWidth(), getHeight());
+		
 	}
 
 	public void draw(Canvas canvas)
@@ -100,14 +91,14 @@ public  class Game extends View implements Runnable{
 		if(period!=0 && hitPoints != totalPoints)
 		{
 			MyCanvas=canvas;
-			
-			canvas.drawBitmap(Backgrounds[2], 0, 0, paint);	
+		
+			//canvas.drawBitmap(Backgrounds[2], 0, 0, paint);	
+			canvas.drawBitmap(Backgrounds[2], null, Back, paint);
 			
 			// 3 imagens que ficarão na parte de cima
 			canvas.drawBitmap(geometricFigures[0], 0, 0, paint);		
 			canvas.drawBitmap(geometricFigures[1], getWidth()/3, 0, paint);
 			canvas.drawBitmap(geometricFigures[2], getWidth() - 100 , 0, paint);
-			
 			// Imagem que ficará na parte de baixo
 			canvas.drawBitmap(geometricFigures[6], positionX, positionY, paint);
 	
@@ -127,13 +118,13 @@ public  class Game extends View implements Runnable{
 		if(period == 0)
 		{
 			canvas.drawText("Você Perdeu", getWidth() / 3, getHeight() / 2, paint);
-			canvas.drawBitmap(Backgrounds[1], 0, 0, paint);
+			canvas.drawBitmap(Backgrounds[1], null, Back, paint);
 		}
 		
 		if(hitPoints == totalPoints)
 		{
 			canvas.drawText("Você Venceu", getWidth() / 3, getHeight() / 2, paint);
-			canvas.drawBitmap(Backgrounds[0], 0, 0, paint);
+			canvas.drawBitmap(Backgrounds[0], null, Back, paint);
 		}
 	}
 	
@@ -194,21 +185,30 @@ public  class Game extends View implements Runnable{
 			if(currentTime-period>=1 )
 			{
 				geometricFigures[current]=geometricFigures[6];
-				current = rnd.nextInt(3);
-						
-				while(geometricFigures[6]==geometricFigures[current+3])
+				
+			
+				
+				while(current+3==oi[0] || current+3==oi[1] )
 				{
-					current=rnd.nextInt(3);
+						current=rnd.nextInt(3);
+						
 				}
 				
-				if(geometricFigures[6]!=geometricFigures[current+3])
-				{		
-					geometricFigures[6]=geometricFigures[current+3];
-					positionX=getWidth()/2;
-					positionY=getHeight()/2;
-					hitPoints++;
-					currentTime=0;
+				for(int i = 0 ;i<oi.length;i++){
+					if(oi[i]==0){
+						oi[i]=current+3;				
+						break;
+					}
+					
 				}
+				
+					
+				geometricFigures[6]=geometricFigures[current+3];
+				positionX=getWidth()/2;
+				positionY=getHeight()/2;
+				hitPoints++;
+				currentTime=0;
+				
 						
 			 }
 		 }
