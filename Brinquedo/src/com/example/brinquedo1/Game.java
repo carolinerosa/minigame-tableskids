@@ -28,13 +28,12 @@ public  class Game extends View implements Runnable{
 	int totalPoints = 3;
 	int hitPoints = 0;	
 	Rect object_down ;
-	int[] oi = new int[3];
+	int[] order = new int[3];
 	Rect [] areaObjectsUp = new Rect[3];
 	private static float positionX;
 	private static float positionY;
 	private Canvas MyCanvas;
 	private Random rnd = new Random();
-	private Boolean pode = true;
 	private int current;
 	private int currentTime;
 	
@@ -60,10 +59,10 @@ public  class Game extends View implements Runnable{
 			geometricFigures[3] = img.ImageManager("circuloColor.png", context);
 			geometricFigures[4] = img.ImageManager("hexagonoColor.png", context);
 			geometricFigures[5] = img.ImageManager("trianguloColor.png", context);
-			geometricFigures[6] = geometricFigures[current+3];
-			oi[0] = current+3;
-			oi[1]=0;
-			oi[2]=0;
+			geometricFigures[6] = geometricFigures[current + 3];
+			order[0] = current + 3;
+			order[1]= 0;
+			order[2]= 0;
 			Backgrounds[0] = img.ImageManager("bgCongrats.bmp", context);
 			Backgrounds[1] = img.ImageManager("bgGameOver.bmp", context);
 			Backgrounds[2] = img.ImageManager("Background1.png", context);
@@ -81,7 +80,6 @@ public  class Game extends View implements Runnable{
 		positionX= getWidth()/2;
 		positionY=getHeight()/2;
 		Back.set(0, 0, getWidth(), getHeight());
-		
 	}
 
 	public void draw(Canvas canvas)
@@ -92,19 +90,19 @@ public  class Game extends View implements Runnable{
 		{
 			MyCanvas=canvas;
 		
-			//canvas.drawBitmap(Backgrounds[2], 0, 0, paint);	
 			canvas.drawBitmap(Backgrounds[2], null, Back, paint);
 			
-			// 3 imagens que ficarão na parte de cima
+			// Figuras geométricas que ficarão na parte de cima
 			canvas.drawBitmap(geometricFigures[0], 0, 0, paint);		
 			canvas.drawBitmap(geometricFigures[1], getWidth()/3, 0, paint);
 			canvas.drawBitmap(geometricFigures[2], getWidth() - 100 , 0, paint);
-			// Imagem que ficará na parte de baixo
+			
+			// Imagem que ficará na parte de baixo (figura geométrica em PB).
 			canvas.drawBitmap(geometricFigures[6], positionX, positionY, paint);
 	
 			// Textos na tela.
-			canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/12 ,getHeight() - 12, paint);
-			canvas.drawText("Time:" +" " +  period , getWidth() - 140, getHeight() - 12, paint);
+			canvas.drawText("Score:" + hitPoints + "/" + totalPoints, getWidth()/13 ,getHeight()/1.1f, paint);
+			canvas.drawText("Time:" +" " +  period , getWidth()/1.5f, getHeight()/1.1f, paint);
 			
 			int a = (int)positionX;
 			int b = (int)positionY;
@@ -115,15 +113,15 @@ public  class Game extends View implements Runnable{
 			 areaObjectsUp[2]= new Rect(getWidth()-100,0, (int)getWidth()-100+ (int)geometricFigures[2].getWidth(), (int)geometricFigures[2].getHeight());
 		}
 		
+		// Condição de derrota.
 		if(period == 0)
 		{
-			canvas.drawText("Você Perdeu", getWidth() / 3, getHeight() / 2, paint);
 			canvas.drawBitmap(Backgrounds[1], null, Back, paint);
 		}
 		
+		// Condição de vitória.
 		if(hitPoints == totalPoints)
 		{
-			canvas.drawText("Você Venceu", getWidth() / 3, getHeight() / 2, paint);
 			canvas.drawBitmap(Backgrounds[0], null, Back, paint);
 		}
 	}
@@ -148,7 +146,8 @@ public  class Game extends View implements Runnable{
 				positionX = event.getRawX()-geometricFigures[3].getWidth()/2;
 				positionY = event.getRawY()-geometricFigures[3].getHeight()/2;
 				
-				for(int i =0;i<3;i++){
+				for(int i =0;i<3;i++)
+				{
 					if(geometricFigures[6] == geometricFigures[i+3])
 					{
 						if(object_down.contains((int)areaObjectsUp[i].exactCenterX(), (int)areaObjectsUp[i].exactCenterY()))
@@ -159,7 +158,6 @@ public  class Game extends View implements Runnable{
 						}
 					}
 				}
-				
 			}
 		}
 		
@@ -186,30 +184,26 @@ public  class Game extends View implements Runnable{
 			{
 				geometricFigures[current]=geometricFigures[6];
 				
-			
-				
-				while(current+3==oi[0] || current+3==oi[1] )
+				// Verificação para não vir nenhuma figura geométrica repetida.
+				while(current+3==order[0] || current+3==order[1] )
 				{
 						current=rnd.nextInt(3);
 						
 				}
 				
-				for(int i = 0 ;i<oi.length;i++){
-					if(oi[i]==0){
-						oi[i]=current+3;				
+				for(int i = 0 ;i<order.length;i++){
+					if(order[i]==0){
+						order[i]=current+3;				
 						break;
 					}
 					
 				}
 				
-					
 				geometricFigures[6]=geometricFigures[current+3];
 				positionX=getWidth()/2;
 				positionY=getHeight()/2;
 				hitPoints++;
-				currentTime=0;
-				
-						
+				currentTime=0;	
 			 }
 		 }
 	}
@@ -218,7 +212,6 @@ public  class Game extends View implements Runnable{
 	{
 		while(true)
 		{
-			
 			try
 			{	
 				Thread.sleep(time);
@@ -233,10 +226,5 @@ public  class Game extends View implements Runnable{
 			postInvalidate();
 		}
 		// TODO Auto-generated method stub
-		
 	}
-	
-	
-
-	
 }
