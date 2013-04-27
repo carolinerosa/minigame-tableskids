@@ -17,7 +17,9 @@ public class MainActivity extends Activity
 		Log.i(TAG, "on create");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setVolumeControlStream(AudioManager.STREAM_MUSIC);
+	    requestWindowFeature(Window.FEATURE_LEFT_ICON);   
 		View view = new Game(this);
 		setContentView(view);
+		
 	}
 }
