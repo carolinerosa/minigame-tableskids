@@ -1,6 +1,5 @@
 package com.example.brinquedo1;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
@@ -36,6 +35,7 @@ public  class Game extends View implements Runnable{
 	private Random rnd = new Random();
 	private int current;
 	private int currentTime;
+	ImageManager img;
 	
 	public Game(Context context) 
 	{
@@ -46,7 +46,7 @@ public  class Game extends View implements Runnable{
 		setLongClickable(true);
 
 		Backgrounds = new Bitmap[3];
-		ImageManager img = new ImageManager();
+		img = new ImageManager();
 		paint = new Paint();
 		
 		paint.setColor(Color.BLACK); 
@@ -108,9 +108,9 @@ public  class Game extends View implements Runnable{
 			int b = (int)positionY;
 			object_down= new Rect(a,b, a+ (int)geometricFigures[5].getWidth(), b+(int)geometricFigures[3].getHeight());
 			
-			 areaObjectsUp[0]= new Rect(0,0, 0+ (int)geometricFigures[0].getWidth(), (int)geometricFigures[0].getHeight());
-			 areaObjectsUp[1]= new Rect(getWidth()/3,0, (int)getWidth()/3+ (int)geometricFigures[1].getWidth(), (int)geometricFigures[1].getHeight());
-			 areaObjectsUp[2]= new Rect(getWidth()-100,0, (int)getWidth()-100+ (int)geometricFigures[2].getWidth(), (int)geometricFigures[2].getHeight());
+			areaObjectsUp[0]= new Rect(0,0, 0+ (int)geometricFigures[0].getWidth(), (int)geometricFigures[0].getHeight());
+			areaObjectsUp[1]= new Rect(getWidth()/3,0, (int)getWidth()/3+ (int)geometricFigures[1].getWidth(), (int)geometricFigures[1].getHeight());
+			areaObjectsUp[2]= new Rect(getWidth()-100,0, (int)getWidth()-100+ (int)geometricFigures[2].getWidth(), (int)geometricFigures[2].getHeight());
 		}
 		
 		// Condição de derrota.
