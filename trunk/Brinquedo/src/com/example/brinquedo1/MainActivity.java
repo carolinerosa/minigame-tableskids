@@ -18,8 +18,7 @@ public class MainActivity extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	    requestWindowFeature(Window.FEATURE_LEFT_ICON);   
-		View view = new Game(this);
-		setContentView(view);
-		
+	    Menu menu = new Menu(this);
+		setContentView(menu);
 	}
 }
