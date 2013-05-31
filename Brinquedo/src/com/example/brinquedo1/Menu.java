@@ -53,11 +53,18 @@ public class Menu extends View implements Runnable
 		
 		canvas.drawBitmap(background, 0,0, paint);
 		canvas.drawBitmap(options[0], getWidth()/3, getHeight()/2, paint);
-		canvas.drawBitmap(options[1], getWidth()/14, getHeight()/1.6f, paint);
-		canvas.drawBitmap(options[2], getWidth()/1.5f, getHeight()/1.5f, paint);
+//		canvas.drawBitmap(options[1], getWidth()/14, getHeight()/1.6f, paint);
+//		canvas.drawBitmap(options[2], getWidth()/1.5f, getHeight()/1.5f, paint);
 		
 		areaOptions[0] = new Rect(getWidth()/3,getHeight()/2, getWidth()/3 + (int)options[0].getWidth(),getHeight()/2 + (int)options[0].getHeight());
-	
+		areaOptions[1] = new Rect(getWidth()/14,getHeight()/2 + 30, getWidth()/14 + (int)options[1].getWidth() - 10,getHeight()/2 + (int)options[1].getHeight() + 20);
+		areaOptions[2] = new Rect(getWidth()/2 - 20,getHeight()/2 - 20, getWidth()/2 + (int)options[2].getWidth(), getHeight()/2 + (int)options[2].getHeight());
+
+		
+		// Desenho dos Rects para visualizar os testes colisão com o dedo.
+//		canvas.drawRect(areaOptions[0], paint);
+//		canvas.drawRect(areaOptions[1], paint);
+//		canvas.drawRect(areaOptions[2], paint);
 }
 	
 	public boolean onTouchEvent(MotionEvent event) 

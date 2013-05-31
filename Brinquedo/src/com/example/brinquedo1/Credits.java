@@ -48,8 +48,6 @@ public class Credits extends View implements Runnable
 		
 		canvas.drawBitmap(background, 0,0, paint);
 /*		canvas.drawBitmap(options[0], getWidth()/3, getHeight()/2, paint);
-		canvas.drawBitmap(options[1], getWidth()/14, getHeight()/1.6f, paint);
-		canvas.drawBitmap(options[2], getWidth()/1.5f, getHeight()/1.5f, paint);
 		
 		areaOptions[0] = new Rect(getWidth()/3,getHeight()/2, getWidth()/3 + (int)options[0].getWidth(),getHeight()/2 + (int)options[0].getHeight());
 	*/
