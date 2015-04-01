@@ -1,0 +1,1 @@
+Esse é um beta que simula uma mesa de formas geométricas cujo o objetivo é que a criança aprenda sobre formas encaixando as coloridas no espaço correto.
